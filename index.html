@@ -1,13 +1,2440 @@
-<!doctype html>
+
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Portfolio of Nicholas Bookout, a communication designer based in Austin, Texas." />
-    <title>nbookout</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>nbookout</title>
+
+  <link
+    rel="icon"
+    type="image/png"
+    href="poster/Favicon.png?v=2"
+  >
+
+
+  <style>
+
+    /* =========================================
+       GLOBAL
+    ========================================= */
+
+    * {
+      box-sizing: border-box;
+    }
+
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+
+    body {
+      margin: 0;
+
+      background: white;
+      color: black;
+
+      font-family:
+        Helvetica,
+        Arial,
+        sans-serif;
+
+      font-size: 14px;
+
+      overflow-x: hidden;
+    }
+
+
+    button {
+      appearance: none;
+      -webkit-appearance: none;
+
+      border: 0;
+      outline: 0;
+
+      background: transparent;
+
+      padding: 0;
+      margin: 0;
+
+      font-family:
+        Helvetica,
+        Arial,
+        sans-serif;
+
+      font-size: 14px;
+      font-weight: 400;
+
+      color: black;
+
+      cursor: pointer;
+    }
+
+
+
+    /* =========================================
+       SKYLINE
+    ========================================= */
+
+    .skyline {
+      position: fixed;
+
+      left: 0;
+      bottom: 0;
+
+      width: 100%;
+
+      z-index: 0;
+
+      pointer-events: none;
+    }
+
+
+    .skyline img {
+      display: block;
+
+      width: 100%;
+      height: auto;
+    }
+
+
+    body.print-open .skyline {
+      display: none;
+    }
+
+
+
+    /* =========================================
+       SITE NAME
+    ========================================= */
+
+    .site-name {
+      position: fixed;
+
+      top: calc(50% - 28px);
+      left: 50%;
+
+      transform:
+        translateX(-50%);
+
+      font-size: 14px;
+
+      z-index: 100;
+
+      transition:
+        opacity 0.25s ease;
+    }
+
+
+    body.portfolio-open .site-name,
+    body.info-open .site-name {
+      opacity: 0;
+
+      pointer-events: none;
+    }
+
+
+
+    /* =========================================
+       HOME NAVIGATION
+    ========================================= */
+
+    .work-menu {
+      position: fixed;
+
+      top: 50%;
+      left: calc(50% - 18px);
+
+      transform:
+        translate(-100%, -50%);
+
+      z-index: 100;
+
+      transition:
+        top 0.5s ease,
+        left 0.5s ease,
+        opacity 0.3s ease,
+        transform 0.5s ease;
+    }
+
+
+    .center-divider {
+      position: fixed;
+
+      top: 50%;
+      left: 50%;
+
+      transform:
+        translate(-50%, -50%);
+
+      z-index: 100;
+
+      transition:
+        opacity 0.3s ease;
+    }
+
+
+    #infoButton {
+      position: fixed;
+
+      top: 50%;
+      left: calc(50% + 18px);
+
+      transform:
+        translateY(-50%);
+
+      z-index: 700;
+
+      transition:
+        top 0.5s ease,
+        left 0.5s ease,
+        right 0.5s ease,
+        color 0.2s ease,
+        transform 0.5s ease;
+    }
+
+
+    .menu-word:hover {
+      color: gray;
+    }
+
+
+
+    /* =========================================
+       WORK MENU
+    ========================================= */
+
+    .work-wrapper {
+      position: relative;
+    }
+
+
+    #workButton.active {
+      color: gray;
+    }
+
+
+    .work-categories {
+      position: absolute;
+
+      top: 100%;
+      left: 0;
+
+      display: flex;
+      flex-direction: column;
+
+      align-items: flex-start;
+
+      gap: 5px;
+
+      padding-top: 10px;
+
+      min-width: max-content;
+
+      opacity: 0;
+      visibility: hidden;
+
+      transform:
+        translateY(-5px);
+
+      transition:
+        opacity 0.25s ease,
+        transform 0.25s ease,
+        visibility 0.25s ease;
+    }
+
+
+    .work-categories.visible {
+      opacity: 1;
+      visibility: visible;
+
+      transform:
+        translateY(0);
+    }
+
+
+    .category-button {
+      white-space: nowrap;
+
+      text-align: left;
+    }
+
+
+    .category-button:hover,
+    .category-button.active {
+      color: gray;
+    }
+
+
+
+    /* =========================================
+       PORTFOLIO OPEN
+    ========================================= */
+
+    body.portfolio-open .work-menu {
+      top: 50%;
+      left: 30px;
+
+      transform:
+        translateY(-50%);
+    }
+
+
+    body.portfolio-open .work-categories {
+      position: relative;
+
+      top: auto;
+      left: auto;
+
+      padding-top: 14px;
+
+      opacity: 1;
+      visibility: visible;
+
+      transform: none;
+    }
+
+
+    body.portfolio-open #workButton {
+      color: gray;
+    }
+
+
+    body.portfolio-open .center-divider {
+      opacity: 0;
+
+      pointer-events: none;
+    }
+
+
+    body.portfolio-open #infoButton {
+      top: 50%;
+
+      left: auto;
+      right: 30px;
+
+      transform:
+        translateY(-50%);
+    }
+
+
+
+    /* =========================================
+       INFO OPEN
+    ========================================= */
+
+    body.info-open .work-menu {
+      opacity: 0;
+
+      pointer-events: none;
+    }
+
+
+    body.info-open .center-divider {
+      opacity: 0;
+
+      pointer-events: none;
+    }
+
+
+    body.info-open #infoButton {
+      top: 50%;
+
+      left: auto;
+      right: 30px;
+
+      transform:
+        translateY(-50%);
+
+      color: gray;
+    }
+
+
+
+    /* =========================================
+       PORTFOLIO CONTENT
+    ========================================= */
+
+    .portfolio-content {
+      display: none;
+
+      position: relative;
+
+      z-index: 2;
+
+      width: 100%;
+
+      padding:
+        30px
+        100px
+        60px
+        170px;
+
+      background: transparent;
+    }
+
+
+    body.portfolio-open .portfolio-content {
+      display: block;
+    }
+
+
+    .category-grid {
+      display: none;
+
+      width: 100%;
+    }
+
+
+    .category-grid.active {
+      display: block;
+    }
+
+
+
+    /* =========================================
+       GENERAL PHOTO GRID
+    ========================================= */
+
+    .photo-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(
+          auto-fit,
+          minmax(220px, 1fr)
+        );
+
+      gap: 12px;
+
+      width: 100%;
+
+      background: transparent;
+    }
+
+
+    .photo-item {
+      width: 100%;
+
+      cursor: pointer;
+    }
+
+
+    .photo-item img {
+      display: block;
+
+      width: 100%;
+      height: auto;
+    }
+
+
+    .photo-item:hover img {
+      opacity: 0.75;
+    }
+
+
+
+    /* =========================================
+       POSTER DESKTOP GRID
+    ========================================= */
+
+    #poster .photo-grid {
+      grid-template-columns:
+        repeat(4, 1fr);
+    }
+
+#illustration .photo-grid {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+    /* =========================================
+       PRINT PROJECTS
+    ========================================= */
+
+    .print-projects {
+      display: flex;
+      flex-direction: column;
+
+      gap: 70px;
+
+      width: 100%;
+    }
+
+
+    .print-project {
+      width: 100%;
+    }
+
+
+    #print .print-project:first-child {
+      min-height: 100vh;
+
+      display: flex;
+      flex-direction: column;
+
+      justify-content: center;
+    }
+
+
+    .carousel-wrapper {
+      position: relative;
+
+      width: 100%;
+    }
+
+
+    .print-carousel {
+      display: flex;
+
+      width: 100%;
+
+      overflow-x: hidden;
+
+      scroll-behavior: smooth;
+      scroll-snap-type: x mandatory;
+    }
+
+
+    .print-carousel::-webkit-scrollbar {
+      display: none;
+    }
+
+
+    .print-carousel img {
+      flex:
+        0
+        0
+        100%;
+
+      width: 100%;
+      height: 450px;
+
+      object-fit: contain;
+
+      scroll-snap-align: start;
+
+      cursor: pointer;
+    }
+
+
+    .print-carousel img:hover {
+      opacity: 0.75;
+    }
+
+
+    .print-caption {
+      margin-top: 10px;
+
+      max-width: 600px;
+
+      font-size: 14px;
+      line-height: 1.3;
+    }
+
+
+    #print
+    .print-project:first-child
+    .print-caption {
+      margin-left: auto;
+      margin-right: auto;
+
+      text-align: center;
+    }
+
+
+
+    /* =========================================
+       CAROUSEL ARROWS
+    ========================================= */
+
+    .carousel-arrow {
+      position: absolute;
+
+      top: 50%;
+
+      transform:
+        translateY(-50%);
+
+      z-index: 5;
+
+      font-size: 22px;
+
+      background: white;
+
+      padding: 5px;
+
+      cursor: pointer;
+    }
+
+
+    .carousel-left {
+      left: 5px;
+    }
+
+
+    .carousel-right {
+      right: 5px;
+    }
+
+
+    .carousel-arrow:hover {
+      color: gray;
+    }
+
+
+
+    /* =========================================
+       INFO PAGE
+    ========================================= */
+
+    .info-page {
+      position: fixed;
+
+      inset: 0;
+
+      width: 100%;
+      min-height: 100vh;
+
+      background: white;
+
+      opacity: 0;
+      visibility: hidden;
+
+      pointer-events: none;
+
+      transition:
+        opacity 0.35s ease,
+        visibility 0.35s ease;
+
+      z-index: 500;
+    }
+
+
+    body.info-open .info-page {
+      opacity: 1;
+      visibility: visible;
+
+      pointer-events: auto;
+    }
+
+
+    .info-content {
+  position: absolute;
+
+  top: 50%;
+  left: 50%;
+
+  transform:
+    translate(-50%, -50%);
+
+  display: grid;
+
+  grid-template-columns:
+    220px 1fr;
+
+  gap: 30px;
+
+  align-items: start;
+
+  width:
+    min(
+      700px,
+      calc(100vw - 180px)
+    );
+
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+
+.info-photo img {
+  display: block;
+
+  width: 100%;
+  height: auto;
+}
+
+
+.info-text p:first-child {
+  margin-top: 0;
+}
+
+    .info-content p:first-child {
+      margin-top: 0;
+    }
+
+
+    .info-content p:last-child {
+      margin-bottom: 0;
+    }
+
+
+
+    /* =========================================
+       IMAGE DETAIL PAGE
+    ========================================= */
+
+    .image-page {
+      position: fixed;
+
+      inset: 0;
+
+      display: none;
+
+      background: white;
+
+      z-index: 1000;
+
+      overflow-y: auto;
+    }
+
+
+    .image-page.visible {
+      display: block;
+    }
+
+
+    .image-page-inner {
+      width: 100%;
+
+      min-height: 100vh;
+
+      padding:
+        30px
+        70px
+        50px
+        70px;
+    }
+
+
+    .detail-image {
+      display: block;
+
+      max-width: 100%;
+      max-height: 78vh;
+
+      width: auto;
+      height: auto;
+
+      margin:
+        0
+        auto
+        30px
+        auto;
+    }
+
+
+    .detail-text {
+      max-width: 700px;
+
+      margin:
+        0
+        auto;
+
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+
+    .detail-title {
+      margin-bottom: 8px;
+
+      font-weight: 400;
+    }
+
+
+    .detail-caption {
+      margin: 0;
+    }
+
+
+
+    /* =========================================
+       RETURN ARROW
+    ========================================= */
+
+    .return-arrow {
+      position: fixed;
+
+      top: 50%;
+      left: 25px;
+
+      transform:
+        translateY(-50%);
+
+      font-size: 34px;
+      font-weight: 300;
+
+      z-index: 1100;
+    }
+
+
+    .return-arrow:hover {
+      color: gray;
+    }
+
+
+
+    /* =========================================
+       MOBILE
+    ========================================= */
+
+    @media (max-width: 700px) {
+
+
+      /* SIDEBAR */
+
+      body.portfolio-open .work-menu {
+        left: 16px;
+      }
+
+
+      body.portfolio-open #infoButton,
+      body.info-open #infoButton {
+        right: 16px;
+      }
+
+
+
+      /* MAIN CONTENT SPACE */
+
+      .portfolio-content {
+        padding:
+          0
+          58px
+          40px
+          112px;
+
+        min-height: 100svh;
+      }
+
+
+      .category-grid {
+        width: 100%;
+      }
+
+#poster .photo-grid {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+#illustration .photo-grid {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+     /* =====================================
+   POSTERS — MOBILE
+===================================== */
+
+#poster .photo-grid {
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+
+  gap: 16px;
+}
+
+
+#poster .photo-item {
+  width: 100%;
+
+  min-height: 0;
+
+  display: block;
+
+  padding: 0;
+  margin: 0;
+}
+
+
+#poster .photo-item img {
+  display: block;
+
+  width: 100%;
+  height: auto;
+
+  max-width: 100%;
+  max-height: none;
+
+  object-fit: contain;
+}
+
+      /* =====================================
+         OTHER CATEGORIES
+      ===================================== */
+
+      .photo-grid {
+        grid-template-columns: 1fr;
+
+        gap: 30px;
+
+        width: 100%;
+      }
+
+
+      .photo-item {
+        width: 100%;
+
+        display: flex;
+
+        justify-content: center;
+      }
+
+
+      .photo-item img {
+        width: 100%;
+        height: auto;
+
+        max-height: 72svh;
+
+        object-fit: contain;
+      }
+
+
+
+      /* =====================================
+         PRINT
+      ===================================== */
+
+      .print-projects {
+        gap: 50px;
+      }
+
+
+      .print-project {
+        width: 100%;
+      }
+
+
+      #print .print-project:first-child {
+        min-height: 100svh;
+
+        display: flex;
+        flex-direction: column;
+
+        justify-content: center;
+      }
+
+
+      .carousel-wrapper {
+        width: 100%;
+      }
+
+
+      .print-carousel {
+        width: 100%;
+      }
+
+
+      .print-carousel img {
+        flex:
+          0
+          0
+          100%;
+
+        width: 100%;
+        height: auto;
+
+        max-height: 65svh;
+
+        object-fit: contain;
+      }
+
+
+      .carousel-arrow {
+        font-size: 18px;
+
+        padding:
+          8px
+          4px;
+      }
+
+
+      .carousel-left {
+        left: 2px;
+      }
+
+
+      .carousel-right {
+        right: 2px;
+      }
+
+
+      .print-caption {
+        width: 100%;
+        max-width: 100%;
+
+        margin-top: 8px;
+
+        font-size: 13px;
+        line-height: 1.3;
+      }
+
+
+
+      /* INFO */
+.info-content {
+  grid-template-columns: 1fr;
+
+  gap: 20px;
+
+  width:
+    calc(100vw - 120px);
+}
+
+
+.info-photo {
+  max-width: 220px;
+}
+      .info-content {
+        width:
+          calc(100vw - 120px);
+
+        font-size: 14px;
+      }
+
+
+
+      /* DETAIL PAGE */
+
+      .image-page-inner {
+        padding:
+          20px
+          20px
+          40px
+          52px;
+      }
+
+
+      .detail-image {
+        max-width: 100%;
+        max-height: 72svh;
+
+        margin:
+          0
+          auto
+          20px
+          auto;
+      }
+
+
+      .detail-text {
+        width: 100%;
+        max-width: 100%;
+
+        font-size: 13px;
+      }
+
+
+      .return-arrow {
+        left: 14px;
+
+        font-size: 28px;
+      }
+
+
+
+      /* SKYLINE */
+
+      .skyline {
+        width: 100%;
+      }
+
+
+      .skyline img {
+        width: 100%;
+        height: auto;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+
+<body>
+
+
+  <!-- =========================================
+       SKYLINE
+  ========================================= -->
+
+  <div class="skyline">
+
+    <img
+      src="wires5.png"
+      alt=""
+    >
+
+  </div>
+
+
+
+  <!-- =========================================
+       SITE NAME
+  ========================================= -->
+
+  <div class="site-name">
+    nickbookout
+  </div>
+
+
+
+  <!-- =========================================
+       WORK
+  ========================================= -->
+
+  <div class="work-menu">
+
+    <div class="work-wrapper">
+
+      <button
+        class="menu-word"
+        id="workButton"
+        onclick="toggleWork()"
+      >
+        work
+      </button>
+
+
+      <div
+        class="work-categories"
+        id="workCategories"
+      >
+
+        <button
+          class="category-button"
+          onclick="openCategory('poster', this)"
+        >
+          poster
+        </button>
+
+
+        <button
+          class="category-button"
+          onclick="openCategory('print', this)"
+        >
+          print
+        </button>
+
+
+        <button
+          class="category-button"
+          onclick="openCategory('logo', this)"
+        >
+          logo
+        </button>
+
+
+        <button
+          class="category-button"
+          onclick="openCategory('type', this)"
+        >
+          type
+        </button>
+
+
+        <button
+          class="category-button"
+          onclick="openCategory('illustration', this)"
+        >
+          illustration
+        </button>
+
+
+        <button
+          class="category-button"
+          onclick="openCategory('branding', this)"
+        >
+          branding
+        </button>
+
+
+        <button
+          class="category-button"
+          onclick="openCategory('partymusic', this)"
+        >
+          partymusic
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- =========================================
+       CENTER DIVIDER
+  ========================================= -->
+
+  <div class="center-divider">
+    |
+  </div>
+
+
+
+  <!-- =========================================
+       INFO BUTTON
+  ========================================= -->
+
+  <button
+    class="menu-word"
+    id="infoButton"
+    onclick="toggleInfo()"
+  >
+    info
+  </button>
+
+
+
+  <!-- =========================================
+       PORTFOLIO
+  ========================================= -->
+
+  <main class="portfolio-content">
+
+
+
+    <!-- =====================================
+         POSTER
+    ====================================== -->
+
+    <section
+      class="category-grid"
+      id="poster"
+    >
+
+      <div class="photo-grid">
+
+
+        <div
+          class="photo-item"
+          onclick="
+            openImage(
+              'poster/poster1.jpeg',
+              'Poster Title',
+              'Add your caption and project information here.'
+            )
+          "
+        >
+          <img src="poster/poster1.jpeg" alt="">
+        </div>
+
+
+        <div
+          class="photo-item"
+          onclick="
+            openImage(
+              'poster/poster2.jpeg',
+              'Selecta!',
+              ''
+            )
+          "
+        >
+          <img src="poster/poster2.jpeg" alt="">
+        </div>
+
+
+        <div
+          class="photo-item"
+          onclick="
+            openImage(
+              'poster/poster3.jpeg',
+              'Poster Title',
+              'Add your caption and project information here.'
+            )
+          "
+        >
+          <img src="poster/poster3.jpeg" alt="">
+        </div>
+
+
+        <div
+          class="photo-item"
+          onclick="
+            openImage(
+              'poster/poster4.jpeg',
+              'Poster Title',
+              'Add your caption and project information here.'
+            )
+          "
+        >
+          <img src="poster/poster4.jpeg" alt="">
+        </div>
+
+
+        <div
+          class="photo-item"
+          onclick="
+            openImage(
+              'poster/poster5.jpeg',
+              'Poster Title',
+              'Add your caption and project information here.'
+            )
+          "
+        >
+          <img src="poster/poster5.jpeg" alt="">
+        </div>
+
+
+        <div
+          class="photo-item"
+          onclick="
+            openImage(
+              'poster/poster6.jpeg',
+              'Poster Title',
+              'Add your caption and project information here.'
+            )
+          "
+        >
+          <img src="poster/poster6.jpeg" alt="">
+        </div>
+
+
+        <div
+          class="photo-item"
+          onclick="
+            openImage(
+              'poster/poster7.jpeg',
+              'Poster Title',
+              'Add your caption and project information here.'
+            )
+          "
+        >
+          <img src="poster/poster7.jpeg" alt="">
+        </div>
+
+
+        <div
+          class="photo-item"
+          onclick="
+            openImage(
+              'poster/poster8.jpeg',
+              'Poster Title',
+              'Add your caption and project information here.'
+            )
+          "
+        >
+          <img src="poster/poster8.jpeg" alt="">
+        </div>
+
+
+        <div
+          class="photo-item"
+          onclick="
+            openImage(
+              'poster/poster9.jpeg',
+              'Poster Title',
+              'Add your caption and project information here.'
+            )
+          "
+        >
+          <img src="poster/poster9.jpeg" alt="">
+        </div>
+
+
+        <div
+          class="photo-item"
+          onclick="
+            openImage(
+              'poster/poster10.jpeg',
+              'Poster Title',
+              'Add your caption and project information here.'
+            )
+          "
+        >
+          <img src="poster/poster10.jpeg" alt="">
+        </div>
+
+
+        <div
+          class="photo-item"
+          onclick="
+            openImage(
+              'poster/poster 11.jpeg',
+              'Poster Title',
+              'Add your caption and project information here.'
+            )
+          "
+        >
+          <img src="poster/poster 11.jpeg" alt="">
+        </div>
+
+
+        <div
+          class="photo-item"
+          onclick="
+            openImage(
+              'poster/poster12.jpeg',
+              'Poster Title',
+              'Add your caption and project information here.'
+            )
+          "
+        >
+          <img src="poster/poster12.jpeg" alt="">
+        </div>
+
+
+        <div
+          class="photo-item"
+          onclick="
+            openImage(
+              'poster/poster13.jpeg',
+              'Poster Title',
+              'Add your caption and project information here.'
+            )
+          "
+        >
+          <img src="poster/poster13.jpeg" alt="">
+        </div>
+
+
+        <div
+          class="photo-item"
+          onclick="
+            openImage(
+              'poster/poster14.jpeg',
+              'Poster Title',
+              'Add your caption and project information here.'
+            )
+          "
+        >
+          <img src="poster/poster14.jpeg" alt="">
+        </div>
+
+
+        <div
+          class="photo-item"
+          onclick="
+            openImage(
+              'poster/poster15.jpeg',
+              'Poster Title',
+              'Add your caption and project information here.'
+            )
+          "
+        >
+          <img src="poster/poster15.jpeg" alt="">
+        </div>
+
+
+        <div
+          class="photo-item"
+          onclick="
+            openImage(
+              'poster/poster16.jpeg',
+              'Poster Title',
+              'Add your caption and project information here.'
+            )
+          "
+        >
+          <img src="poster/poster16.jpeg" alt="">
+        </div>
+
+
+        <div
+          class="photo-item"
+          onclick="
+            openImage(
+              'poster/poster17.jpeg',
+              'Poster Title',
+              'Add your caption and project information here.'
+            )
+          "
+        >
+          <img src="poster/poster17.jpeg" alt="">
+        </div>
+
+
+        <div
+          class="photo-item"
+          onclick="
+            openImage(
+              'poster/poster18.jpeg',
+              'Poster Title',
+              'Add your caption and project information here.'
+            )
+          "
+        >
+          <img src="poster/poster18.jpeg" alt="">
+        </div>
+
+
+        <div
+          class="photo-item"
+          onclick="
+            openImage(
+              'poster/poster19.jpeg',
+              'Poster Title',
+              'Add your caption and project information here.'
+            )
+          "
+        >
+          <img src="poster/poster19.jpeg" alt="">
+        </div>
+
+
+        <div
+          class="photo-item"
+          onclick="
+            openImage(
+              'poster/poster20.jpeg',
+              'Poster Title',
+              'Add your caption and project information here.'
+            )
+          "
+        >
+          <img src="poster/poster20.jpeg" alt="">
+        </div>
+
+
+        <div
+          class="photo-item"
+          onclick="
+            openImage(
+              'poster/poster21.jpeg',
+              'Poster Title',
+              'Add your caption and project information here.'
+            )
+          "
+        >
+          <img src="poster/poster21.jpeg" alt="">
+        </div>
+
+
+        <div
+          class="photo-item"
+          onclick="
+            openImage(
+              'poster/poster22.jpeg',
+              'Poster Title',
+              'Add your caption and project information here.'
+            )
+          "
+        >
+          <img src="poster/poster22.jpeg" alt="">
+        </div>
+
+
+        <div
+          class="photo-item"
+          onclick="
+            openImage(
+              'poster/poster23.jpeg',
+              'Poster Title',
+              'Add your caption and project information here.'
+            )
+          "
+        >
+          <img src="poster/poster23.jpeg" alt="">
+        </div>
+
+
+        <div
+          class="photo-item"
+          onclick="
+            openImage(
+              'poster/poster24.jpeg',
+              'Poster Title',
+              'Add your caption and project information here.'
+            )
+          "
+        >
+          <img src="poster/poster24.jpeg" alt="">
+        </div>
+<div
+          class="photo-item"
+          onclick="
+            openImage(
+              'poster/poster25.jpeg',
+              'Poster Title',
+              'Add your caption and project information here.'
+            )
+          "
+        >
+          <img src="poster/poster25.jpeg" alt="">
+        </div>
+<div
+          class="photo-item"
+          onclick="
+            openImage(
+              'poster/poster26.jpeg',
+              'Poster Title',
+              'Add your caption and project information here.'
+            )
+          "
+        >
+          <img src="poster/poster26.jpeg" alt="">
+        </div>
+<div
+          class="photo-item"
+          onclick="
+            openImage(
+              'poster/poster27.jpeg',
+              'Poster Title',
+              'Add your caption and project information here.'
+            )
+          "
+        >
+          <img src="poster/poster27.jpeg" alt="">
+        </div>
+<div
+          class="photo-item"
+          onclick="
+            openImage(
+              'poster/poster28.jpeg',
+              'Poster Title',
+              'Add your caption and project information here.'
+            )
+          "
+        >
+          <img src="poster/poster28.jpeg" alt="">
+        </div>
+        <div
+          class="photo-item"
+          onclick="
+            openImage(
+              'poster/poster29.jpeg',
+              'Poster Title',
+              'Add your caption and project information here.'
+            )
+          "
+        >
+          <img src="poster/poster29.jpeg" alt="">
+        </div>
+      </div>
+
+    </section>
+
+
+
+    <!-- =====================================
+         PRINT
+    ====================================== -->
+
+    <section
+      class="category-grid"
+      id="print"
+    >
+
+      <div class="print-projects">
+
+
+        <!-- PRINT PROJECT 1 -->
+
+        <div class="print-project">
+
+          <div class="carousel-wrapper">
+
+
+            <button
+              class="carousel-arrow carousel-left"
+              onclick="moveCarousel(this, -1)"
+              aria-label="Previous image"
+            >
+              &lt;
+            </button>
+
+
+            <div class="print-carousel">
+
+
+              <img
+                src="print/1.jpg"
+                alt=""
+                onclick="
+                  openImage(
+                    'print/1.jpg',
+                    'Texas Free Party',
+                    'Caption and information for this image.'
+                  )
+                "
+              >
+
+
+              <img
+                src="print/2.jpg"
+                alt=""
+                onclick="
+                  openImage(
+                    'print/2.jpg',
+                    'Texas Free Party',
+                    'Caption and information for this image.'
+                  )
+                "
+              >
+
+
+              <img
+                src="print/3.jpg"
+                alt=""
+                onclick="
+                  openImage(
+                    'print/3.jpg',
+                    'Texas Free Party',
+                    'Caption and information for this image.'
+                  )
+                "
+              >
+
+
+              <img
+                src="print/4.jpg"
+                alt=""
+                onclick="
+                  openImage(
+                    'print/4.jpg',
+                    'Texas Free Party',
+                    'Caption and information for this image.'
+                  )
+                "
+              >
+
+
+              <img
+                src="print/5.jpg"
+                alt=""
+                onclick="
+                  openImage(
+                    'print/5.jpg',
+                    'Texas Free Party',
+                    'Caption and information for this image.'
+                  )
+                "
+              >
+
+
+              <img
+                src="print/6.jpg"
+                alt=""
+                onclick="
+                  openImage(
+                    'print/6.jpg',
+                    'Texas Free Party',
+                    'Caption and information for this image.'
+                  )
+                "
+              >
+
+
+              <img
+                src="print/7.jpg"
+                alt=""
+                onclick="
+                  openImage(
+                    'print/7.jpg',
+                    'Texas Free Party',
+                    'Caption and information for this image.'
+                  )
+                "
+              >
+
+
+              <img
+                src="print/8.jpg"
+                alt=""
+                onclick="
+                  openImage(
+                    'print/8.jpg',
+                    'Texas Free Party',
+                    'Caption and information for this image.'
+                  )
+                "
+              >
+
+
+            </div>
+
+
+            <button
+              class="carousel-arrow carousel-right"
+              onclick="moveCarousel(this, 1)"
+              aria-label="Next image"
+            >
+              &gt;
+            </button>
+
+
+          </div>
+
+
+          <div class="print-caption">
+            Texas Free Party is a curated collection of physical and digital promotional matters created by central Texas rave and party collectives from 2022-2024.
+    
+
+      </div>
+
+    </section>
+
+
+
+    <!-- =====================================
+         LOGO
+    ====================================== -->
+
+    <section
+      class="category-grid"
+      id="logo"
+    >
+
+      <div class="photo-grid">
+
+        <div
+          class="photo-item"
+          onclick="
+            openImage(
+              'logo/1.png',
+              'Logo Project',
+              'Add your caption and project information here.'
+            )
+          "
+        >
+          <img src="logo/1.png" alt="">
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- =====================================
+         TYPE
+    ====================================== -->
+
+    <section
+      class="category-grid"
+      id="type"
+    >
+
+      <div class="photo-grid">
+
+        <div
+          class="photo-item"
+          onclick="
+            openImage(
+              'type/1.jpg',
+              'Type Project',
+              'Add your caption and project information here.'
+            )
+          "
+        >
+          <img src="type/1.jpg" alt="">
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- =====================================
+         ILLUSTRATION
+    ====================================== -->
+
+    <section
+      class="category-grid"
+      id="illustration"
+    >
+
+      <div class="photo-grid">
+
+        <div
+          class="photo-item"
+          onclick="
+            openImage(
+              'illustration/1.jpeg',
+              'Illustration',
+              'Add your caption and project information here.'
+            )
+          "
+        >
+          <img src="illustration/1.jpeg" alt="">
+        </div>
+ <div
+          class="photo-item"
+          onclick="
+            openImage(
+              'illustration/2.jpeg',
+              'Illustration',
+              'Add your caption and project information here.'
+            )
+          "
+        >
+          <img src="illustration/2.jpeg" alt="">
+        </div>
+        <div
+          class="photo-item"
+          onclick="
+            openImage(
+              'illustration/3.jpeg',
+              'Illustration',
+              'Add your caption and project information here.'
+            )
+          "
+        >
+          <img src="illustration/3.jpeg" alt="">
+        </div>
+        <div
+          class="photo-item"
+          onclick="
+            openImage(
+              'illustration/4.jpeg',
+              'Illustration',
+              'Add your caption and project information here.'
+            )
+          "
+        >
+          <img src="illustration/4.jpeg" alt="">
+        </div>
+      </div>
+
+    </section>
+
+
+
+    <!-- =====================================
+         BRANDING
+    ====================================== -->
+
+    <section
+      class="category-grid"
+      id="branding"
+    >
+
+      <div class="photo-grid">
+
+        <div
+          class="photo-item"
+          onclick="
+            openImage(
+              'branding/1.jpg',
+              'Branding Project',
+              'Add your caption and project information here.'
+            )
+          "
+        >
+          <img src="branding/1.jpg" alt="">
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- =====================================
+         PARTYMUSIC
+    ====================================== -->
+
+    <section
+      class="category-grid"
+      id="partymusic"
+    >
+
+      <div class="photo-grid">
+
+        <div
+          class="photo-item"
+          onclick="
+            openImage(
+              'partymusic/1.jpg',
+              'Partymusic',
+              'Add your caption and project information here.'
+            )
+          "
+        >
+          <img src="partymusic/1.jpg" alt="">
+        </div>
+
+      </div>
+
+    </section>
+
+
+  </main>
+
+
+
+  <!-- =========================================
+       INFO PAGE
+  ========================================= -->
+
+  <section
+    class="info-page"
+    id="infoPage"
+  >
+<div class="info-content">
+
+  <div class="info-photo">
+    <img src="info-photo.jpg" alt="">
+  </div>
+
+  <div class="info-text">
+
+    <p>
+      Nicholas Bookout
+    </p>
+
+    <p>
+      Designer, graphic artist, people person, subculture warrior
+    </p>
+
+    <p>
+      BFA in Communication Design at Texas State University
+    </p>
+
+    <p>
+      Based in Austin, TX
+    </p>
+
+    <p>
+      nickbookout000@gmail.com
+    </p>
+
+    <p>
+      @book0ut
+    </p>
+
+    <p>
+      @nickbookout
+    </p>
+
+    <p>
+      @partymusic000
+    </p>
+
+  </div>
+
+</div>
+</section>
+  <!-- =========================================
+       IMAGE DETAIL PAGE
+  ========================================= -->
+
+  <div
+    class="image-page"
+    id="imagePage"
+  >
+
+    <button
+      class="return-arrow"
+      onclick="closeImage()"
+      aria-label="Return to grid"
+    >
+      &lt;
+    </button>
+
+
+    <div class="image-page-inner">
+
+      <img
+        class="detail-image"
+        id="detailImage"
+        src=""
+        alt=""
+      >
+
+
+      <div class="detail-text">
+
+        <div
+          class="detail-title"
+          id="detailTitle"
+        >
+        </div>
+
+
+        <p
+          class="detail-caption"
+          id="detailCaption"
+        >
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- =========================================
+       JAVASCRIPT
+  ========================================= -->
+
+  <script>
+
+    const workButton =
+      document.getElementById(
+        "workButton"
+      );
+
+
+    const workCategories =
+      document.getElementById(
+        "workCategories"
+      );
+
+
+    const imagePage =
+      document.getElementById(
+        "imagePage"
+      );
+
+
+
+    /* =========================================
+       CAROUSEL
+    ========================================= */
+
+    function moveCarousel(
+      button,
+      direction
+    ) {
+
+      const wrapper =
+        button.closest(
+          ".carousel-wrapper"
+        );
+
+
+      const carousel =
+        wrapper.querySelector(
+          ".print-carousel"
+        );
+
+
+      carousel.scrollBy({
+        left:
+          carousel.clientWidth *
+          direction,
+
+        behavior:
+          "smooth"
+      });
+
+    }
+
+
+
+    /* =========================================
+       WORK
+    ========================================= */
+
+    function toggleWork() {
+
+      const portfolioIsOpen =
+        document.body.classList.contains(
+          "portfolio-open"
+        );
+
+
+      if (portfolioIsOpen) {
+
+        closePortfolio();
+
+        return;
+
+      }
+
+
+      document.body.classList.remove(
+        "info-open"
+      );
+
+
+      workCategories.classList.toggle(
+        "visible"
+      );
+
+
+      workButton.classList.toggle(
+        "active"
+      );
+
+    }
+
+
+
+    /* =========================================
+       CLOSE PORTFOLIO
+    ========================================= */
+
+    function closePortfolio() {
+
+      document.body.classList.remove(
+        "print-open"
+      );
+
+
+      document.body.classList.remove(
+        "portfolio-open"
+      );
+
+
+      workCategories.classList.remove(
+        "visible"
+      );
+
+
+      workButton.classList.remove(
+        "active"
+      );
+
+
+      document
+        .querySelectorAll(
+          ".category-grid"
+        )
+        .forEach(
+          grid =>
+            grid.classList.remove(
+              "active"
+            )
+        );
+
+
+      document
+        .querySelectorAll(
+          ".category-button"
+        )
+        .forEach(
+          button =>
+            button.classList.remove(
+              "active"
+            )
+        );
+
+    }
+
+
+
+    /* =========================================
+       OPEN CATEGORY
+    ========================================= */
+
+    function openCategory(
+      category,
+      button
+    ) {
+
+      document.body.classList.remove(
+        "info-open"
+      );
+
+
+      document.body.classList.add(
+        "portfolio-open"
+      );
+
+
+      document.body.classList.remove(
+        "print-open"
+      );
+
+
+      if (
+        category === "print"
+      ) {
+
+        document.body.classList.add(
+          "print-open"
+        );
+
+      }
+
+
+      workCategories.classList.add(
+        "visible"
+      );
+
+
+      workButton.classList.add(
+        "active"
+      );
+
+
+      document
+        .querySelectorAll(
+          ".category-grid"
+        )
+        .forEach(
+          grid =>
+            grid.classList.remove(
+              "active"
+            )
+        );
+
+
+      document
+        .querySelectorAll(
+          ".category-button"
+        )
+        .forEach(
+          item =>
+            item.classList.remove(
+              "active"
+            )
+        );
+
+
+      const selectedGrid =
+        document.getElementById(
+          category
+        );
+
+
+      selectedGrid.classList.add(
+        "active"
+      );
+
+
+      button.classList.add(
+        "active"
+      );
+
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+
+    }
+
+
+
+    /* =========================================
+       INFO
+    ========================================= */
+
+    function toggleInfo() {
+
+      const infoIsOpen =
+        document.body.classList.contains(
+          "info-open"
+        );
+
+
+      if (infoIsOpen) {
+
+        document.body.classList.remove(
+          "info-open"
+        );
+
+        return;
+
+      }
+
+
+      closePortfolio();
+
+
+      document.body.classList.add(
+        "info-open"
+      );
+
+    }
+
+
+
+    /* =========================================
+       OPEN IMAGE
+    ========================================= */
+
+    function openImage(
+      imageSource,
+      title,
+      caption
+    ) {
+
+      document.getElementById(
+        "detailImage"
+      ).src =
+        imageSource;
+
+
+      document.getElementById(
+        "detailTitle"
+      ).textContent =
+        title;
+
+
+      document.getElementById(
+        "detailCaption"
+      ).textContent =
+        caption;
+
+
+      imagePage.classList.add(
+        "visible"
+      );
+
+
+      document.body.style.overflow =
+        "hidden";
+
+
+      imagePage.scrollTop =
+        0;
+
+    }
+
+
+
+    /* =========================================
+       CLOSE IMAGE
+    ========================================= */
+
+    function closeImage() {
+
+      imagePage.classList.remove(
+        "visible"
+      );
+
+
+      document.body.style.overflow =
+        "";
+
+    }
+
+
+
+    /* =========================================
+       ESCAPE KEY
+    ========================================= */
+
+    document.addEventListener(
+      "keydown",
+      function(event) {
+
+        if (
+          event.key === "Escape" &&
+          imagePage.classList.contains(
+            "visible"
+          )
+        ) {
+
+          closeImage();
+
+        }
+
+      }
+    );
+
+  </script>
+
+
+</body>
+
 </html>
