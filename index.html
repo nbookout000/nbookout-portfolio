@@ -1414,19 +1414,25 @@
         </div>
 
 
-        <div
-          class="photo-item"
-          onclick="
-            openImage(
-              'poster/poster15.jpeg',
-              'Poster Title',
-              'Add your caption and project information here.'
-            )
-          "
-        >
-          <img src="poster/poster15.jpeg" alt="">
-        </div>
-
+       <div
+  class="photo-item"
+  data-variants="
+    poster/poster15.jpeg|
+    poster/poster15-1.jpeg|
+  "
+  onclick="
+    openVariantPoster(
+      this,
+      'Mock flyer for the Pom Poms',
+      ''
+    )
+  "
+>
+  <img
+    src="poster/poster15.jpeg"
+    alt=""
+  >
+</div>
 
         <div
           class="photo-item"
@@ -2074,7 +2080,7 @@
   ========================================= -->
 
   <script>
-
+const POSTER_VARIANT_SPEED = 1800;
     const workButton =
       document.getElementById(
         "workButton"
