@@ -1407,18 +1407,22 @@
         </div>
 
 
-        <div
-          class="photo-item"
-          onclick="
-            openImage(
-              'poster/poster10.jpeg',
-              'Poster Title',
-              'Add your caption and project information here.'
-            )
-          "
-        >
-          <img src="poster/poster10.jpeg" alt="">
-        </div>
+       <div
+  class="photo-item"
+  data-variants="poster/poster10.jpeg|poster/poster10-1.jpeg|poster/poster10-2.jpeg|poster/poster10-3.jpeg"
+  onclick="
+    openVariantPoster(
+      this,
+      'Mock flyer for the Pom Poms',
+      ''
+    )
+  "
+>
+  <img
+    src="poster/poster10.jpeg"
+    alt=""
+  >
+</div>
 
 
         <div
