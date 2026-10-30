@@ -2152,31 +2152,6 @@ document.addEventListener(
   setupPosterVariants
 );
 
-function openVariantPoster(
-  item,
-  title,
-  caption
-) {
-
-  const currentImage =
-    item.dataset.currentVariant ||
-    item.querySelector("img").src;
-
-  openImage(
-    currentImage,
-    title,
-    caption
-  );
-
-}
-
-
-
-document.addEventListener(
-  "DOMContentLoaded",
-  setupPosterVariants
-);
-
     const workCategories =
       document.getElementById(
         "workCategories"
