@@ -2085,7 +2085,77 @@ const POSTER_VARIANT_SPEED = 1800;
       document.getElementById(
         "workButton"
       );
+function setupPosterVariants() {
 
+  document
+    .querySelectorAll(
+      "#poster .photo-item[data-variants]"
+    )
+    .forEach((item) => {
+
+      const image =
+        item.querySelector("img");
+
+      const variants =
+        item.dataset.variants
+          .split("|")
+          .map(path => path.trim())
+          .filter(Boolean);
+
+      if (variants.length < 2) {
+        return;
+      }
+
+      let currentIndex = 0;
+
+      item.dataset.currentVariant =
+        variants[0];
+
+
+      setInterval(() => {
+
+        currentIndex =
+          (currentIndex + 1) %
+          variants.length;
+
+        image.src =
+          variants[currentIndex];
+
+        item.dataset.currentVariant =
+          variants[currentIndex];
+
+      }, POSTER_VARIANT_SPEED);
+
+    });
+
+}
+
+
+
+function openVariantPoster(
+  item,
+  title,
+  caption
+) {
+
+  const currentImage =
+    item.dataset.currentVariant ||
+    item.querySelector("img").src;
+
+  openImage(
+    currentImage,
+    title,
+    caption
+  );
+
+}
+
+
+
+document.addEventListener(
+  "DOMContentLoaded",
+  setupPosterVariants
+);
 
     const workCategories =
       document.getElementById(
